@@ -18,8 +18,6 @@ import javax.swing.JPanel;
 
 public class Graphing extends JPanel {
 	private ArrayList<ArrayList<Double>> times;
-	private JFrame frame;
-	private JLabel label;
 	private final int GRAPH_WIDTH = 850;
 	private final int GRAPH_HEIGHT = 600;
 	private final int MAX_LINES = 9;
@@ -28,6 +26,8 @@ public class Graphing extends JPanel {
 	private Color axisColor;
 	private Color gridLineColor;
 	private Color stringColor;
+	private Color[] lineColors;
+	private ArrayList<JLabel> colorLabels;
 	private static final Stroke GRAPH_STROKE = new BasicStroke(1f);
 	private final int POINT_SIZE = 4;
 	private int size = 0;
@@ -42,12 +42,25 @@ public class Graphing extends JPanel {
 		axisColor = new Color(0, 0, 0, 255);
 		gridLineColor = new Color(0, 0, 0, 50);
 		stringColor = new Color(0, 0, 0, 255);
-		label = new JLabel("Test");
-		System.out.println(args);
+		
+		lineColors = new Color[5];
+		lineColors[0] = new Color(178,34,34, 255); //red
+		lineColors[1] = new Color(50,205,50, 255); //green
+		lineColors[2] = new Color(30,144,255, 255); //blue
+		lineColors[3] = new Color(75,0,130, 255); //indigo
+		lineColors[4] = new Color(255,223,0, 255); //gold
+		
+		colorLabels = new ArrayList<JLabel>();
 
 		try {
 			if (args.get(0).equals("python") || args.get(0).equals("c") || args.get(0).equals("java")) {
 				times.add(new ArrayList<Double>());
+				colorLabels.add(new JLabel(args.get(0)));
+				colorLabels.add(new JLabel());
+				colorLabels.get(1).setOpaque(true);
+				colorLabels.get(1).setBackground(lineColors[0]);
+				colorLabels.get(1).setPreferredSize(new Dimension(10, 10));
+				
 				for (int i = 2; i < args.size(); i++) {
 					times.get(0).add(Double.parseDouble(args.get(i)));
 					if (times.get(0).get(i - 2) > max)
@@ -56,6 +69,7 @@ public class Graphing extends JPanel {
 						min = times.get(0).get(i - 2);
 				}
 				size = times.get(0).size();
+				
 			} else if (args.get(0).equals("all")) {
 				if (args.get(1).equals("merge") ||
 						args.get(1).equals("quick") || 
@@ -67,6 +81,11 @@ public class Graphing extends JPanel {
 						if (args.get(i).equals("python") || args.get(i).equals("c") || args.get(i).equals("java")) {
 							times.add(new ArrayList<Double>());
 							count++;
+							colorLabels.add(new JLabel(args.get(i)));
+							colorLabels.add(new JLabel());
+							colorLabels.get((2 * count) + 1).setOpaque(true);
+							colorLabels.get((2 * count) + 1).setBackground(lineColors[count]);
+							colorLabels.get((2 * count) + 1).setPreferredSize(new Dimension(10, 10));
 							continue;
 						}
 						if (args.get(i).equals("end"))
@@ -78,6 +97,7 @@ public class Graphing extends JPanel {
 						if (temp < min)
 							min = temp;
 					}
+					
 				} else if (args.get(1).equals("java") ||
 						args.get(1).equals("c") || 
 						args.get(1).equals("python")) {
@@ -90,6 +110,11 @@ public class Graphing extends JPanel {
 								args.get(i).equals("heap")) {
 							times.add(new ArrayList<Double>());
 							count++;
+							colorLabels.add(new JLabel(args.get(i)));
+							colorLabels.add(new JLabel());
+							colorLabels.get((2 * count) + 1).setOpaque(true);
+							colorLabels.get((2 * count) + 1).setBackground(lineColors[count]);
+							colorLabels.get((2 * count) + 1).setPreferredSize(new Dimension(10, 10));
 							continue;
 						}
 						if (args.get(i).equals("end"))
@@ -111,7 +136,8 @@ public class Graphing extends JPanel {
 			return;
 		}
 
-		add(label);
+		for (JLabel label : colorLabels)
+			add(label);
 
 	}
 
@@ -187,6 +213,7 @@ public class Graphing extends JPanel {
 		 * last part is (verticalOffset - verticalOffset) because the top line is the max value, and is at a y of verticalOffset.
 		 */
 		for (int list = 0; list < times.size(); list++) {
+			g2.setColor(lineColors[list]);
 			for (int i = 1; i < size; i++) {
 				g2.drawLine((int) (((workableXarea) / size) * (i - 1)) + horizontalOffset,
 						(int) ((workableYarea + verticalOffset) - (times.get(list).get(i-1) / max) * (workableYarea)),
