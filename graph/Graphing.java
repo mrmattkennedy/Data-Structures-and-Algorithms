@@ -63,18 +63,19 @@ public class Graphing extends JPanel {
 
 				for (int i = 2; i < args.size(); i++) {
 					if (args.get(i).equals("x")) {
-						for (int j = i + 1; j < args.size(); j++) {
+						for (int j = i + 1; j < args.size() - 1; j++) {
 							xAxis.add(Double.parseDouble(args.get(j)));
 						}
+						size = times.get(0).size();
 						break;
 					}
+					
 					times.get(0).add(Double.parseDouble(args.get(i)));
 					if (times.get(0).get(i - 2) > max)
 						max = times.get(0).get(i - 2);
 					if (times.get(0).get(i - 2) < min)
 						min = times.get(0).get(i - 2);
 				}
-				size = times.get(0).size();
 
 			} else if (args.get(0).equals("all")) {
 				if (args.get(1).equals("merge") || args.get(1).equals("quick") || args.get(1).equals("bubble")
@@ -98,6 +99,7 @@ public class Graphing extends JPanel {
 							for (int j = i + 1; j < args.size() - 1; j++) {
 								xAxis.add(Double.parseDouble(args.get(j)));
 							}
+							size = times.get(0).size();
 							break;
 						}
 						double temp = Double.parseDouble(args.get(i));
@@ -126,9 +128,10 @@ public class Graphing extends JPanel {
 							continue;
 
 						if (args.get(i).equals("x")) {
-							for (int j = i + 1; j < args.size(); j++) {
+							for (int j = i + 1; j < args.size() - 1; j++) {
 								xAxis.add(Double.parseDouble(args.get(j)));
 							}
+							size = times.get(0).size();
 							break;
 						}
 
@@ -141,7 +144,6 @@ public class Graphing extends JPanel {
 
 					}
 				}
-				size = times.get(0).size();
 			}
 
 		} catch (NumberFormatException e) {

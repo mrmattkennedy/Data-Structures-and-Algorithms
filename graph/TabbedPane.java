@@ -18,6 +18,8 @@ public class TabbedPane extends JTabbedPane {
 	public static void main (String[] args) {
 		ArrayList<ArrayList<String>> inputVals = new ArrayList<ArrayList<String>>();
 		int currList = -1;
+		for (int i = 0; i < args.length; i++)
+			System.out.println(args[i]);
 		
 		for (int i = 0; i < args.length; i++) {
 			if (args[i].equals("all")) {
