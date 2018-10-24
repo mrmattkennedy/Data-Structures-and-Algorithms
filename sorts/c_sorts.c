@@ -23,6 +23,7 @@ int main (int argc, char** argv) {
 	struct timespec start, end;
 	int size, choice;
 	void (*sort_fun_ptr_arr[])(int[], int) = {insertionSort, bubbleSort};
+	uint64_t average = 0;
 
 	for (int i = 1; i < argc; i+=2) {
 		size = atoi(argv[i + 1]);
@@ -36,17 +37,20 @@ int main (int argc, char** argv) {
 			continue;
 		}
 
-		for (int i = 0; i < size; i++)
-			arrayToSort[i] = rand() % 10001;
-		
-		clock_gettime(CLOCK_MONOTONIC_RAW, &start);
-		(*sort_fun_ptr_arr[choice])(arrayToSort, size);
-		clock_gettime(CLOCK_MONOTONIC_RAW, &end);
+		for (int j = 1; j <= 10; j++) {
+			for (int k = 0; k < size; k++)
+				arrayToSort[k] = rand() % 10001;
 
-		uint64_t delta_us = (end.tv_sec - start.tv_sec) * 1000000 + (end.tv_nsec - start.tv_nsec) / 1000;
-		printf("% " PRId64, delta_us);
+			clock_gettime(CLOCK_MONOTONIC_RAW, &start);
+			(*sort_fun_ptr_arr[choice])(arrayToSort, size);
+			clock_gettime(CLOCK_MONOTONIC_RAW, &end);
+
+			uint64_t delta_us = (end.tv_sec - start.tv_sec) * 1000000 + (end.tv_nsec - start.tv_nsec) / 1000;
+			average += delta_us;
+		}
+		printf("% " PRId64, average / 5);
 		//for (int i = 0; i < size; i++)
-			//printf("%d\n", arrayToSort[i]);
+		//printf("%d\n", arrayToSort[i]);
 	}
 	return 1;
 }
